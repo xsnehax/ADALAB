@@ -9,7 +9,7 @@ int n;
 
 void DFS(int V) {
     vis[V] = 1;
-    printf("%d ", V);
+    printf("%d\n", V);
     for (int i = 1; i <= n; i++) {
         if (a[V][i] == 1 && vis[i] == 0) {
             DFS(i);
