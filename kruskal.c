@@ -1,108 +1,85 @@
 #include<stdio.h>
-#include<stdlib.h>
-#define infinity 9999
-#define MAX 20
+#include<conio.h>
 
-int G[MAX][MAX], spanning[MAX][MAX], n;
-
-int prims();
-
-int main()
+int find(int v,int parent[10])
 {
-    int i, j, total_cost;
-    printf("Enter no. of vertices: ");
-    scanf("%d", &n);
-    printf("\nEnter the adjacency matrix:\n");
-    for (i = 0; i < n; i++)
-    {
-        for (j = 0; j < n; j++)
-        {
-            scanf("%d", &G[i][j]);
-        }
-    }
-    total_cost = prims();
-    printf("\nspanning tree matrix:\n");
-    for (i = 0; i < n; i++)
-    {
-        printf("\n");
-        for (j = 0; j < n; j++)
-        {
-            printf("%d\t", spanning[i][j]);
-        }
-    }
-    printf("\n\nTotal cost of spanning tree = %d", total_cost);
-    return 0;
+   while(parent[v]!=v)
+   {
+      v=parent[v];
+   }
+   return v;
 }
 
-int prims()
+void union1(int i,int j,int parent[10])
 {
-    int cost[MAX][MAX];
-    int u, v, min_distance, distance[MAX], from[MAX];
-    int visited[MAX], no_of_edges, i, min_cost, j;
-
-    // create cost[][] matrix, spanning[][]
-    for (i = 0; i < n; i++)
-    {
-        for (j = 0; j < n; j++)
-        {
-            if (G[i][j] == 0)
-            {
-                cost[i][j] = infinity;
-            }
-            else
-            {
-                cost[i][j] = G[i][j];
-            }
-            spanning[i][j] = 0;
-        }
-    }
-
-    // initialise visited[], distance[] and from[]
-    distance[0] = 0;
-    visited[0] = 1;
-    for (i = 1; i < n; i++)
-    {
-        distance[i] = cost[0][i];
-        from[i] = 0;
-        visited[i] = 0;
-    }
-
-    min_cost = 0; // cost of spanning tree
-    no_of_edges = n - 1; // no. of edges to be added
-
-    while (no_of_edges > 0)
-    {
-        // find the vertex at minimum distance from the tree
-        min_distance = infinity;
-        for (i = 1; i < n; i++)
-        {
-            if (visited[i] == 0 && distance[i] < min_distance)
-            {
-                v = i;
-                min_distance = distance[i];
-            }
-        }
-        u = from[v];
-
-        // insert the edge in spanning tree
-        spanning[u][v] = distance[v];
-        spanning[v][u] = distance[v];
-        no_of_edges--;
-        visited[v] = 1;
-
-        // update the distance[] array
-        for (i = 1; i < n; i++)
-        {
-            if (visited[i] == 0 && cost[i][v] < distance[i])
-            {
-                distance[i] = cost[i][v];
-                from[i] = v;
-            }
-        }
-
-        min_cost += cost[u][v];
-    }
-
-    return min_cost;
+   if(i<j)
+      parent[j]=i;
+   else
+      parent[i]=j;
 }
 
+void kruskal(int n,int a[10][10])
+{
+   int count,k,min,sum,i,j,t[10][10],u,v,parent[10];
+   count=0;
+   k=0;
+   sum=0;
+   for(i=0;i<n;i++)
+      parent[i]=i;
+   while(count!=n-1)
+   {
+      min=999;
+      for(i=0;i<n;i++)
+      {
+	 for(j=0;j<n;j++)
+	 {
+
+	    if(a[i][j]<min && a[i][j]!=0)
+	    {
+		min=a[i][j];
+		u=i;
+		v = j;                                          
+	     }
+	  }
+       }
+       i=find(u,parent);
+       j=find(v,parent);
+       if(i!=j)
+       {
+	  union1(i,j,parent);
+	  t[k][0]=u;
+	  t[k][1]=v;
+	  k++;
+	  count++;
+	  sum=sum+a[u][v];
+       }
+       a[u][v]=a[v][u]=999;
+    }
+    if(count==n-1)
+    {
+       printf("spanning tree\n");
+       for(i=0;i<n-1;i++)
+       {
+	  printf("%d %d\n",t[i][0],t[i][1]);
+       }
+       printf("cost of spanning tree=%d\n",sum);
+    }
+    else
+       printf("spanning tree does not exist\n");
+  }
+
+
+void main()
+{
+   int n,i,j,a[10][10];
+   
+   printf("enter the number of nodes\n");
+   scanf("%d",&n);
+   printf("enter the adjacency matrix\n");
+   for(i=0;i<n;i++)
+     for(j=0;j<n;j++)
+	scanf("%d",&a[i][j]);
+   kruskal(n,a);
+   
+
+}
