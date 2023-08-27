@@ -17,9 +17,10 @@ void DFS(int V) {
 
 void isConnectedDFS() {
     for (int i = 0; i < n; i++) {
-        if (vis[i] == 0) {
-            DFS(i);
+        for (int j = 0; j < n; j++) {
+            vis[j] = 0;
         }
+        DFS(i);
     }
 }
 
@@ -29,11 +30,14 @@ int main() {
     printf("Enter the number of vertices: ");
     scanf("%d", &n);
 
-    printf("Enter the adjacency matrix:\n");
     for (i = 0; i < n; i++) {
         for (j = 0; j < n; j++) {
             scanf("%d", &a[i][j]);
         }
+    }
+
+    for (i = 0; i < n; i++) {
+        vis[i] = 0;
     }
 
     isConnectedDFS();
